@@ -5,41 +5,56 @@ import { PlinkoPhysics } from "@/lib/physics";
 
 const PlinkoBoard = () => {
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const plinkoRef = useRef<PlinkoPhysics | null>(null);
     const width = 800;
-    const height = 600;
-    const rows = 6;
-    const cols = 10;
+    const height = 700;
+    const rows = 9;
+    const cols = 16;
 	const spacing = width / cols;
 
     useEffect(() => {
         if (!containerRef.current) return;
 
         const plinko = new PlinkoPhysics({ width, height, container: containerRef.current });
+        plinkoRef.current = plinko;
 
-        // Add pegs
         for (let i = 0; i < cols; i ++) {
             for (let j = 0; j < rows; j++) {
-                let x = i * spacing;
+                let x = 20 + i * spacing;
                 if (j % 2 == 0) {
 					x += spacing / 2;
                 }
-				let y = spacing + j * spacing;
+				let y = 2 * spacing + j * spacing;
                 plinko.addPeg(x, y, 4);
             }
         }
-
-		for (let i = 0; i < 10; i++) {
-			setTimeout(() => {
-				let ball = plinko.addBall(width / 2, 25, 15);
-			}, 1000 * i);
-		}
 
         return () => {
             plinko.stop();
         };
     }, [width, height]);
 
-    return <div ref={containerRef} className="w-full h-full" />;
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!containerRef.current || !plinkoRef.current) return;
+
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (y <= 80) {
+            plinkoRef.current.addBall(x, y, 15);
+        }
+    };
+
+    return (
+        <div className="relative w-full h-full" onClick={handleClick}>
+            <div ref={containerRef} className="w-full h-full" />
+
+            <div className="absolute top-0 left-0 w-full h-[80px] flex items-center justify-center text-white font-bold border-2 border-dotted border-white pointer-events-none bg-transparent text-4xl">
+                Click Here To Play
+            </div>
+        </div>
+    );
 };
 
 export default PlinkoBoard;
