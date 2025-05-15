@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { PlinkoPhysics } from "@/lib/physics";
+import { getStageBuckets, CharacterGroup, generateStage3Buckets } from "@/lib/PlinkoStages";
 
 interface Highlight {
     bucketIndex: number;
@@ -20,7 +21,41 @@ const PlinkoBoard = () => {
     const [highlights, setHighlights] = useState<Highlight[]>([]);
     let highlightId = 0;
 
+    type StageState = {
+        stage: number;
+        group?: CharacterGroup;
+        range?: string;
+    };
+
+    let currentState: StageState = { stage: 1 };
+
+    const processBucketHit = (bucketIndex: number) => {
+        const { stage, group, range } = currentState;
+        let buckets: string[] = [];
+
+        if (stage === 3 && range) {
+            buckets = generateStage3Buckets(range);
+        } else {
+            buckets = getStageBuckets(stage, group);
+        }
+
+        const selected = buckets[bucketIndex];
+        console.log(`Stage: ${stage}, Bucket: ${bucketIndex + 1}, Selected: ${selected}`);
+
+        if (stage === 1) {
+            currentState = { stage: 2, group: selected as CharacterGroup };
+        } else if (stage === 2 && group) {
+            currentState = { stage: 3, range: selected, group: undefined };
+        } else if (stage === 3 && range) {
+            console.log(`Final character picked from range '${range}': ${selected}`);
+
+            currentState = { stage: 1, group: undefined, range: undefined };
+        }
+    };
+
     const handleBucketHit = (bucketIndex: number) => {
+		processBucketHit(bucketIndex);
+
         const newHighlight = { bucketIndex, id: highlightId++ };
         setHighlights((prev) => [...prev, newHighlight]);
 
@@ -109,6 +144,9 @@ const PlinkoBoard = () => {
                     </div>
                 ))}
             </div>
+            {/*<div className="absolute top-0 left-0 w-full h-[80px] flex items-center justify-center text-white font-bold pointer-events-none bg-transparent text-4xl rainbow-outline">*/}
+            {/*    Click Here To Play*/}
+            {/*</div>*/}
             <div className="absolute top-0 left-0 w-full h-[80px] flex items-center justify-center text-white font-bold border-2 border-dotted border-white pointer-events-none bg-transparent text-4xl">
                 Click Here To Play
             </div>
