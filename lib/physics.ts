@@ -4,6 +4,7 @@ export interface PhysicsConfig {
     width: number;
     height: number;
     container: HTMLElement;
+    onBucketHit?: (bucketIndex: number) => void;
 }
 
 export class PlinkoPhysics {
@@ -11,10 +12,13 @@ export class PlinkoPhysics {
     private world: World;
     private render: Render;
     private runner: Runner;
+    private onBucketHit?: (bucketIndex: number) => void;
+    private buckets: Body[] = [];
 
-    constructor({ width, height, container }: PhysicsConfig) {
+    constructor({ width, height, container, onBucketHit }: PhysicsConfig) {
         this.engine = Engine.create();
         this.world = this.engine.world;
+        this.onBucketHit = onBucketHit;
 
         this.render = Render.create({
             element: container,
@@ -63,7 +67,8 @@ export class PlinkoPhysics {
 
             const bottomWall = Bodies.rectangle(x, y + bucketHeight / 2, bucketWidth, 10, { isStatic: true });
             bottomWall.render.fillStyle = '#fff';
-            bottomWall.label = 'bucket';
+            bottomWall.label = `bucket`;
+            this.buckets.push(bottomWall);
 
             World.add(this.world, bottomWall);
             if (i < bucketCount - 1) {
@@ -82,20 +87,19 @@ export class PlinkoPhysics {
         Events.on(this.engine, 'collisionStart', (event) => {
             const pairs = event.pairs;
             pairs.forEach(pair => {
-                if (pair.bodyA.label === 'ball' && pair.bodyB.label === 'bucket') {
-                    this.handleBallInBucket(pair.bodyA);
-                } else if (pair.bodyB.label === 'ball' && pair.bodyA.label === 'bucket') {
-					this.handleBallInBucket(pair.bodyB);
+                const { bodyA, bodyB } = pair;
+                const ball = bodyA.label === "ball" ? bodyA : bodyB.label === "ball" ? bodyB : null;
+                const bucket = this.buckets.find((b) => b.id === bodyA.id || b.id === bodyB.id);
+                if (ball && bucket) {
+                    const bucketIndex = this.buckets.indexOf(bucket);
+
+                    if (this.onBucketHit) {
+                        this.onBucketHit(bucketIndex);
+                    }
+                    World.remove(this.world, ball);
                 }
             });
         });
-    }
-
-    private handleBallInBucket(ball: Body): void {
-        World.remove(this.world, ball);
-        //let max = 800;
-		//let min = 0;
-        //this.addBall(Math.floor(Math.random() * (max - min + 1)) + min, 25, 15);
     }
 
     update() {
