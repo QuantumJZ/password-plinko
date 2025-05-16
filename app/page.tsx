@@ -1,38 +1,23 @@
 "use client"
 
 import PlinkoBoard from '@/components/PlinkoBoard';
+import Instructions from '@/components/Instructions';
+import History from '@/components/History';
 import { useState } from "react";
 
 export default function Home() {
 	const [password, setPassword] = useState<string>("");
+	const [history, setHistory] = useState<{ stage: number; char: string | null } | null>(null);
 
 	return (
 		<div className="flex flex-col content-center justify-around min-h-screen">
 			<header className="flex text-white text-5xl font-bold justify-center">Plinko Password Generator</header>
-			<main className="flex flex-col gap-[32px] row-start-2 items-center">
-				<div className="relative flex items-center">
-					<div className="absolute left-[-475px] text-white text-lg max-w-[425px] space-y-4">
-						<h2 className="text-3xl font-bold mb-2">How To Play</h2>
-						<ol className="list-decimal list-inside space-y-2">
-							<li>Click the top area of the plinko board to drop a chip.</li>
-							<li>You need to land 3 chips to select 1 character for your password.</li>
-							<li>
-								<b>Stages:</b>
-								<ul className="list-disc list-inside pl-4 space-y-1 mt-1">
-									<li>Stage 1: Select a group (Lowercase, Uppercase, Numbers/Symbols)</li>
-									<li>Stage 2: Choose a range within the group</li>
-									<li>Stage 3: Pick the specific character</li>
-								</ul>
-							</li>
-							<li>Copy or modify the generated password at the bottom of the screen.</li>
-							<li>View your recent play history on the right side of the board.</li>
-						</ol>
-					</div>
-
-					<div className="border-4 border-white">
-						<PlinkoBoard password={password} setPassword={setPassword} />
-					</div>
+			<main className="flex justify-evenly items-center gap-8 px-8">
+				<Instructions />
+				<div className="border-4 border-white">
+					<PlinkoBoard password={password} setPassword={setPassword} setHistory={setHistory} />
 				</div>
+				<History history={history} setHistory={setHistory} />
 			</main>
 			<footer className="flex gap-4 items-center justify-center p-4">
 				<div className="flex items-center border border-white rounded-lg p-2 bg-black/50">

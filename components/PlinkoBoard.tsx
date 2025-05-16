@@ -12,10 +12,11 @@ interface Highlight {
 interface PlinkoBoardProps {
 	password: string;
     setPassword: React.Dispatch<React.SetStateAction<string>>;
+    setHistory: (entry: { stage: number; char: string | null }) => void;
 }
 
 
-const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword }) => {
+const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword, setHistory }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const plinkoRef = useRef<PlinkoPhysics | null>(null);
     const width = 800;
@@ -46,6 +47,7 @@ const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword }) => {
         }
 
         const selected = buckets[bucketIndex];
+        setHistory({ stage: stage, char: selected });
 
         if (stage === 1) {
             currentState = { stage: 2, group: selected as CharacterGroup };
@@ -53,7 +55,6 @@ const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword }) => {
             currentState = { stage: 3, range: selected, group: undefined };
         } else if (stage === 3 && range) {
             setPassword((prevPassword: string) => prevPassword + selected);
-
             currentState = { stage: 1, group: undefined, range: undefined };
         }
     };
