@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, FC } from "react";
 import { PlinkoPhysics } from "@/lib/physics";
 import { getStageBuckets, CharacterGroup, generateStage3Buckets } from "@/lib/PlinkoStages";
 
@@ -9,7 +9,13 @@ interface Highlight {
     id: number;
 }
 
-const PlinkoBoard = () => {
+interface PlinkoBoardProps {
+	password: string;
+    setPassword: React.Dispatch<React.SetStateAction<string>>;
+}
+
+
+const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const plinkoRef = useRef<PlinkoPhysics | null>(null);
     const width = 800;
@@ -40,14 +46,13 @@ const PlinkoBoard = () => {
         }
 
         const selected = buckets[bucketIndex];
-        console.log(`Stage: ${stage}, Bucket: ${bucketIndex + 1}, Selected: ${selected}`);
 
         if (stage === 1) {
             currentState = { stage: 2, group: selected as CharacterGroup };
         } else if (stage === 2 && group) {
             currentState = { stage: 3, range: selected, group: undefined };
         } else if (stage === 3 && range) {
-            console.log(`Final character picked from range '${range}': ${selected}`);
+            setPassword((prevPassword: string) => prevPassword + selected);
 
             currentState = { stage: 1, group: undefined, range: undefined };
         }
