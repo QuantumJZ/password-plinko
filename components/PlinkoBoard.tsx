@@ -36,6 +36,7 @@ const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword, setHistory }
 
     let currentState: StageState = { stage: 1 };
 
+	// Function to process the bucket hit and update the state
     const processBucketHit = (bucketIndex: number) => {
         const { stage, group, range } = currentState;
         let buckets: string[] = [];
@@ -59,6 +60,7 @@ const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword, setHistory }
         }
     };
 
+    // Trigger the number and bucket highlights when a bucket is hit
     const handleBucketHit = (bucketIndex: number) => {
 		processBucketHit(bucketIndex);
 
@@ -70,6 +72,7 @@ const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword, setHistory }
         }, 500);
     };
 
+	// Initialize the Plinko board and add pegs
     useEffect(() => {
         if (!containerRef.current) return;
 
@@ -98,6 +101,7 @@ const PlinkoBoard: FC<PlinkoBoardProps> = ({ password, setPassword, setHistory }
         };
     }, [width, height]);
 
+	// Handle click events to add a ball to the Plinko board
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!containerRef.current || !plinkoRef.current) return;
 

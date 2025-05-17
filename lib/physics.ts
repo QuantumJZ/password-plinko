@@ -1,4 +1,5 @@
 import Matter, { Engine, Render, World, Bodies, Body, Runner, Events } from 'matter-js';
+import { Howl } from "howler";
 
 export interface PhysicsConfig {
     width: number;
@@ -37,6 +38,7 @@ export class PlinkoPhysics {
 
         this.addBuckets(width, height);
         this.setupBallBucketCollision();
+		this.setupBallPegCollision();
     }
 
     addBall(x: number, y: number, radius: number): Body {
@@ -82,6 +84,16 @@ export class PlinkoPhysics {
         }
     }
 
+    private collisionSound = new Howl({
+        src: ["/collision.mp3"],
+        volume: 1,
+    });
+
+    private successSound = new Howl({
+        src: ["/success.mp3"],
+        volume: 1,
+    });
+
     // Set up collision detection for when balls reach the bottom of a bucket
     private setupBallBucketCollision(): void {
         Events.on(this.engine, 'collisionStart', (event) => {
@@ -91,12 +103,39 @@ export class PlinkoPhysics {
                 const ball = bodyA.label === "ball" ? bodyA : bodyB.label === "ball" ? bodyB : null;
                 const bucket = this.buckets.find((b) => b.id === bodyA.id || b.id === bodyB.id);
                 if (ball && bucket) {
+					this.successSound.play();
                     const bucketIndex = this.buckets.indexOf(bucket);
 
                     if (this.onBucketHit) {
                         this.onBucketHit(bucketIndex);
                     }
                     World.remove(this.world, ball);
+                }
+            });
+        });
+    }
+
+    private pegCollisionCooldown: Map<number, number> = new Map();
+    private pegCooldownDuration = 200;
+
+    // Set up collision detection for when balls hit pegs
+    private setupBallPegCollision(): void {
+        Events.on(this.engine, 'collisionStart', (event) => {
+            const pairs = event.pairs;
+            pairs.forEach(pair => {
+                const { bodyA, bodyB } = pair;
+
+                const ball = bodyA.label === "ball" ? bodyA : bodyB.label === "ball" ? bodyB : null;
+                const peg = bodyA.label === "peg" ? bodyA : bodyB.label === "peg" ? bodyB : null;
+
+                if (ball && peg) {
+                    const currentTime = Date.now();
+                    const lastCollisionTime = this.pegCollisionCooldown.get(ball.id) || 0;
+
+                    if (currentTime - lastCollisionTime > this.pegCooldownDuration) {
+                        this.collisionSound.play();
+                        this.pegCollisionCooldown.set(ball.id, currentTime);
+                    }
                 }
             });
         });

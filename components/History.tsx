@@ -9,6 +9,7 @@ export default function History({ history }: HistoryProps) {
 	const [currentEntry, setCurrentEntry] = useState<(string | null)[]>([null, null, null, null]);
 	const [completedEntries, setCompletedEntries] = useState<string[]>([]);
 
+	// Update the current entry when history changes
 	useEffect(() => {
 		if (!history) return;
 
@@ -30,6 +31,8 @@ export default function History({ history }: HistoryProps) {
 		}
 	}, [history]);
 
+
+	// Formatting entries for display
 	const formatEntry = (entry: (string | null)[]) => {
 		const [s1, s2, s3, char] = entry;
 		return `(${s1 ?? "-"}, ${s2 ?? "-"}, ${s3 ?? "-"}: ${char ?? "-"})`;
