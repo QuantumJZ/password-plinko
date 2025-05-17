@@ -1,6 +1,6 @@
 export default function Instructions() {
 	return (
-		<div className="text-white text-lg max-w-[450px] space-y-4">
+		<div className="text-white text-base max-w-[450px] space-y-4">
 			<h2 className="text-2xl font-bold mb-2">How To Play</h2>
 			<ol className="list-decimal list-inside space-y-2">
 				<li>Click the top area of the plinko board to drop a chip.</li>
