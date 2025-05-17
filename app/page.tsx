@@ -22,7 +22,7 @@ export default function Home() {
 			<footer className="flex gap-4 items-center justify-center p-4">
 				<div className="flex items-center border border-white rounded-lg p-2 bg-black/50">
 					<input
-						className="bg-transparent text-white placeholder-gray outline-none px-2 w-64"
+						className="bg-transparent text-white placeholder-gray outline-none px-2 w-3xl"
 						placeholder="Generated Password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
