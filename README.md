@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plinko Password Generator
 
-## Getting Started
+A visually engaging password generator with a Plinko-inspired board game design. This application allows users to generate secure passwords by selecting character groups, ranges, and specific characters through an interactive Plinko board.
 
-First, run the development server:
+## 🎯 Project Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project is a fun and interactive way to generate passwords by simulating a Plinko board game. Users drop chips through the board to select characters, forming a password one character at a time. The application is built using Next.js with Tailwind CSS for styling and Matter.js for physics handling.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✅ Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* **Interactive Plinko Board:** Drop chips to select character groups, ranges, and specific characters.
+* **Password Display:** View the generated password in real time and copy it to the clipboard.
+* **History Log:** Review previous selections and characters picked.
+* **Responsive Design:** Works well across various screen sizes.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 How to Play
 
-## Learn More
+1. **Click the Top Area:** Click to drop a chip onto the board.
+2. **Select a Character:** Complete three stages to select one character:
 
-To learn more about Next.js, take a look at the following resources:
+   * Stage 1: Choose a character group (Lowercase, Uppercase, Numbers/Symbols).
+   * Stage 2: Select a range within the chosen group.
+   * Stage 3: Pick a specific character.
+3. **Generate the Password:** Repeat the steps to form a complete password.
+4. **View History:** The right-side panel shows the sequence of previous selections.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clone the repository:
 
-## Deploy on Vercel
+   ```bash
+   git clone https://github.com/yourusername/plinko-password-generator.git
+   cd plinko-password-generator
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Install dependencies:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   npm install
+   ```
+
+3. Run the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open the application in your browser:
+
+   ```
+   http://localhost:3000
+   ```
+
+## 📦 Technologies Used
+
+* **Next.js** - Framework for server-rendered React applications.
+* **Tailwind CSS** - Utility-first CSS framework for styling.
+* **Matter.js** - Physics engine for interactive board mechanics.
+
+## 📅 Future Improvements
+
+* Add more fine grained control over which characters can be chosen.
+* Implement custom themes and color palettes.
+* Include a difficulty level selector for password complexity.
+* Expand character groups to include more special symbols.
