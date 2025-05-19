@@ -1,5 +1,7 @@
 # Plinko Password Generator
 
+https://github.com/user-attachments/assets/721e37fd-3bf4-40cc-9df1-71fb9fa52ffd
+
 A visually engaging password generator with a Plinko-inspired board game design. This application allows users to generate secure passwords by selecting character groups, ranges, and specific characters through an interactive Plinko board.
 
 ## 🎯 Project Overview
